@@ -22,7 +22,7 @@ struct ListView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 300, height: 300)
-                    .offset(x: 150,y: -150)
+                    .offset(x: 100,y: -120)
                     .colorInvert()
                     .opacity(0.05)
                 

@@ -9,41 +9,37 @@ import SwiftUI
 
 struct PokemonTypeColorHelper {
     static func color(forType type: String) -> Color {
-        let pastelOpacity: Double = 0.6  // Nivel de transparencia para suavizar los colores
         switch type.lowercased() {
         case "grass", "bug":
-            return Color.green.opacity(pastelOpacity)
+            return Color(hue: 120/360, saturation: 0.3, brightness: 0.7)
         case "fire":
-            return Color.red.opacity(pastelOpacity)
+            return Color(hue: 0/360, saturation: 0.4, brightness: 0.7)
         case "water", "ice":
-            return Color.blue.opacity(pastelOpacity)
+            return Color(hue: 240/360, saturation: 0.3, brightness: 0.7)
         case "electric":
-            return Color.yellow.opacity(pastelOpacity)
+            return Color(hue: 60/360, saturation: 0.4, brightness: 0.7)
         case "poison", "psychic":
-            return Color.purple.opacity(pastelOpacity)
+            return Color(hue: 300/360, saturation: 0.3, brightness: 0.7)
         case "ground", "rock":
-            return Color.brown.opacity(pastelOpacity)
+            return Color(hue: 30/360, saturation: 0.3, brightness: 0.7)
         case "dark":
-            return Color.black.opacity(pastelOpacity)
+            return Color(hue: 0/360, saturation: 0.0, brightness: 0.5)  // Very muted
         case "ghost", "dragon":
-            return Color.indigo.opacity(pastelOpacity)
+            return Color(hue: 270/360, saturation: 0.3, brightness: 0.7)
         case "fairy":
-            return Color.pink.opacity(pastelOpacity)
+            return Color(hue: 330/360, saturation: 0.3, brightness: 0.7)
         case "normal":
-            return Color.gray.opacity(pastelOpacity)
+            return Color(hue: 0/360, saturation: 0.0, brightness: 0.7)
         case "fighting":
-            return Color.orange.opacity(pastelOpacity)
+            return Color(hue: 15/360, saturation: 0.3, brightness: 0.7)
         case "steel":
-            return Color.gray.opacity(0.4)  // Más sutileza para un tipo metálico
+            return Color(hue: 0/360, saturation: 0.0, brightness: 0.6)  // More muted
         case "flying":
-            return Color.skyBlue.opacity(pastelOpacity)
+            return Color(hue: 210/360, saturation: 0.4, brightness: 0.7)
         default:
-            return Color.gray.opacity(pastelOpacity)
+            return Color(hue: 0/360, saturation: 0.0, brightness: 0.7)
         }
     }
 }
 
-extension Color {
-    static let skyBlue = Color(red: 135/255, green: 206/255, blue: 235/255).opacity(0.6)
-}
 

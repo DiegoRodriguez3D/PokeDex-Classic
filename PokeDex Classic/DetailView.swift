@@ -11,56 +11,108 @@ struct DetailView: View {
     @State var selectedTab = 0
 
     var body: some View {
+        let backgroundColor = viewModel.selectedPokemon.map {
+                  PokemonTypeColorHelper.color(forType: $0.types.first?.type.name ?? "")
+        } ?? .red
+        
+        GeometryReader { geo in
         ZStack {
-            // Usa el color de fondo aquí y asegúrate de que llena toda la pantalla.
-            Color(red: 111/255, green: 154/255, blue: 189/255)
-                .edgesIgnoringSafeArea(.all)  // Asegura que el color se extienda a todas las áreas de la pantalla.
-
-            VStack(spacing: 20) {
-                headerSection
-                typeTagsSection
-                Spacer()
-                TabView(selection: $selectedTab) {
-                    aboutSection.tag(0)
-                    baseStatsSection.tag(1)
-                    breedingSection.tag(2)
-                    typeDefensesSection.tag(3)
+            ZStack(alignment: .trailing) {
+                ZStack(alignment: .topLeading) {
+                    backgroundColor.edgesIgnoringSafeArea(.all)
+                    
+                    RoundedRectangle(cornerRadius: 20)
+                        .foregroundStyle(.white)
+                        .frame(width: 200, height: 200)
+                        .opacity(0.15)
+                        .offset(x: -50, y:-80)
+                        .rotationEffect(.degrees(-20))
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-                .frame(height: 300)  // Ajusta según las necesidades de tu contenido
-                .background(Color.white)  // Asegúrate de que el fondo del TabView sea blanco
-                .clipShape(RoundedRectangle(cornerRadius: 12))  // Redondea las esquinas del TabView
-                .padding(.horizontal)  // Añade padding horizontal si es necesario
+                
+                
+                ZStack(alignment: .top) {
+                    Image("pokeball")
+                        .resizable()
+                        .frame(width: 200, height: 200)
+                        .opacity(0.3)
+                        .offset(x: -(geo.size.width/50), y: -(geo.size.height/10))
+                    
+                    Image("dots")
+                        .resizable()
+                        .colorInvert()
+                        .frame(width: 100, height: 100)
+                        .opacity(0.1)
+                        .offset(x: -(geo.size.width/2), y: -(geo.size.height/10))
+                        
+                }
             }
-            .padding(.top)  // Añade padding en la parte superior si es necesario para evitar la notch o el sensor.
+
+            
+                VStack(spacing: 20) {
+                    headerSection
+                        .padding(.top, 80)
+                    Spacer()
+                    
+                    ZStack(alignment: .top) {
+                        TabView(selection: $selectedTab) {
+                            aboutSection.tag(0)
+                            baseStatsSection.tag(1)
+                            breedingSection.tag(2)
+                            typeDefensesSection.tag(3)
+                        }
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                        .frame(height: geo.size.height/2)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 32))
+                        
+                        AsyncImage(url: URL(string: viewModel.selectedPokemon?.sprites.frontDefault ?? "")) { image in
+                            image
+                                .resizable()
+                                .frame(width: geo.size.width, height: geo.size.width)
+                                .offset(y: -(geo.size.height/3))
+                        } placeholder: {
+                            ProgressView()
+                        }
+                    }
+                }
+                .padding(.top)
+            }
         }
+        .ignoresSafeArea()
     }
     
     var headerSection: some View {
-        VStack {
-            AsyncImage(url: URL(string: viewModel.selectedPokemon?.sprites.frontDefault ?? "")) { image in
-                image
-                    .resizable()
-                    .frame(width: 200, height: 200)
-            } placeholder: {
-                Color.gray.frame(width: 200, height: 200)
+        
+        HStack() {
+            VStack(alignment: .leading, spacing: 10) {
+                
+                Text(viewModel.selectedPokemon?.name.capitalized ?? "Pokemon")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundStyle(.white)
+                
+                
+                HStack {
+                    ForEach(viewModel.selectedPokemon?.types ?? [], id: \.slot) { type in
+                        Text(type.type.name.capitalized)
+                            .foregroundColor(.white)
+                            .font(.footnote)
+                            .padding(8)
+                            .frame(width: 70)
+                            .background(Color(.white).opacity(0.3))
+                            .cornerRadius(10)
+                    }
+                }
             }
-            .frame(width: 200, height: 200)
+            
+            Spacer()
+            
+            Text("#\(viewModel.selectedPokemon?.id ?? 0)")
+                .font(.title3)
+                .bold()
+                .foregroundStyle(.white)
         }
-    }
-
-    var typeTagsSection: some View {
-        HStack {
-            ForEach(viewModel.selectedPokemon?.types ?? [], id: \.slot) { type in
-                Text(type.type.name.uppercased())
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(PokemonTypeColorHelper.color(forType: type.type.name))
-                    .cornerRadius(5)
-                    .foregroundColor(.white)
-                    .font(.caption)
-            }
-        }
+        .padding(.horizontal, 30)
     }
 
     var aboutSection: some View {
@@ -71,7 +123,6 @@ struct DetailView: View {
             Text("Weight: \(viewModel.selectedPokemon?.weight ?? 0) kg")
             Text("Abilities: \(viewModel.selectedPokemon?.abilities.map { $0.ability.name }.joined(separator: ", ") ?? "N/A")")
         }
-        .padding()
     }
 
     var baseStatsSection: some View {
@@ -86,7 +137,6 @@ struct DetailView: View {
                 }
             }
         }
-        .padding()
     }
 
     var breedingSection: some View {
@@ -96,7 +146,6 @@ struct DetailView: View {
             // Placeholder for breeding data
             Text("Breeding data goes here")
         }
-        .padding()
     }
 
     var typeDefensesSection: some View {
@@ -106,6 +155,10 @@ struct DetailView: View {
             // Placeholder for type defenses
             Text("Type defenses go here")
         }
-        
     }
+}
+
+#Preview {
+    DetailView()
+        .environment(PokemonViewModel())
 }
