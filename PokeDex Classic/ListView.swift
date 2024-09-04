@@ -17,79 +17,107 @@ struct ListView: View {
 
     var body: some View {
         NavigationView {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(viewModel.pokemons) { pokemon in
-                        NavigationLink(destination: DetailView()) {
-                                ZStack(alignment: .leading) {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(pokemon.types.isEmpty ? Color.gray : PokemonTypeColorHelper.color(forType: pokemon.types[0].type.name))
-                                        .frame(height: 150)
-
-                                    VStack(alignment: .leading) {
-                                        Text(pokemon.name.capitalized)
-                                            .font(.headline)
-                                            .bold()
-                                            .foregroundColor(.white)
-                                            .shadow(radius: 2)
-
+            ZStack (alignment: .topTrailing) {
+                Image("pokeball")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 300, height: 300)
+                    .offset(x: 150,y: -150)
+                    .colorInvert()
+                    .opacity(0.05)
+                
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        Text("PokeDex")
+                            .font(.largeTitle)
+                            .bold()
+                            .padding()
+                        
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(viewModel.pokemons) { pokemon in
+                                NavigationLink(destination: DetailView()) {
+                                    ZStack(alignment: .leading) {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(pokemon.types.isEmpty ? Color.gray : PokemonTypeColorHelper.color(forType: pokemon.types[0].type.name))
+                                            .frame(height: 150)
+                                        
                                         VStack(alignment: .leading) {
-                                            ForEach(pokemon.types) { type in
-                                                Text(type.type.name.capitalized)
+                                            HStack {
+                                                Text(pokemon.name.capitalized)
+                                                    .font(.headline)
+                                                    .bold()
                                                     .foregroundColor(.white)
-                                                    .font(.footnote)
-                                                    .padding(8)
-                                                    .frame(width: 60)
-                                                    .background(Color(.white).opacity(0.3))
-                                                    .cornerRadius(10)
+                                                
+                                                Spacer()
+                                                
+                                                Text("#\(pokemon.id)")
+                                                    .font(.headline)
+                                                    .foregroundColor(.white)
+                                                    .bold()
+                                                    .opacity(0.5)
                                             }
+                                            
+                                            VStack(alignment: .leading) {
+                                                ForEach(pokemon.types) { type in
+                                                    Text(type.type.name.capitalized)
+                                                        .foregroundColor(.white)
+                                                        .font(.footnote)
+                                                        .padding(8)
+                                                        .frame(width: 70)
+                                                        .background(Color(.white).opacity(0.3))
+                                                        .cornerRadius(10)
+                                                }
+                                            }
+                                            
+                                            Spacer()
                                         }
+                                        .padding()
                                         
-                                        Spacer()
-                                    }
-                                    .padding()
-
-                                    HStack(alignment: .bottom) {
-                                        Spacer()
-                                        
-                                        VStack() {
+                                        HStack(alignment: .bottom) {
                                             Spacer()
                                             
-                                            ZStack(alignment: .bottom) {
+                                            VStack() {
+                                                Spacer()
                                                 
-                                                Image("pokeball")
-                                                    .resizable()
-                                                    .frame(width: 100, height: 100)
-                                                    .offset(CGSize(width: 10, height: 10))
-                                                    .opacity(0.3)
-                                                
-                                                AsyncImage(url: URL(string: pokemon.sprites.frontDefault ?? "")) { image in
-                                                    image
+                                                ZStack(alignment: .bottom) {
+                                                    
+                                                    Image("pokeball")
                                                         .resizable()
                                                         .aspectRatio(contentMode: .fit)
-                                                        
+                                                        .frame(width: 100, height: 100)
+                                                        .offset(CGSize(width: 10, height: 10))
+                                                        .clipped()
+                                                        .offset(CGSize(width: 9, height: 0))
+                                                        .opacity(0.3)
                                                     
-                                                } placeholder: {
-                                                    ProgressView()
+                                                    
+                                                    AsyncImage(url: URL(string: pokemon.sprites.frontDefault ?? "")) { image in
+                                                        image
+                                                            .resizable()
+                                                            .aspectRatio(contentMode: .fit)
+                                                        
+                                                        
+                                                    } placeholder: {
+                                                        ProgressView()
+                                                    }
+                                                    .frame(width: 120, height: 120)
+                                                    .shadow(radius: 8)
                                                 }
-                                                .frame(width: 120, height: 120)
-                                                .shadow(radius: 5)
                                             }
                                         }
                                     }
+                                    
                                 }
-
+                                .simultaneousGesture(TapGesture().onEnded {
+                                    viewModel.selectedPokemon = pokemon
+                                })
+                            }
                         }
-                        .simultaneousGesture(TapGesture().onEnded {  
-                                                    viewModel.selectedPokemon = pokemon
-                                                })
+                        .shadow(radius: 5)
+                        .padding(.horizontal, 10)
                     }
-
-                
                 }
-                .padding(.horizontal, 10)
             }
-            .navigationTitle("PokeDex")
             .listStyle(.plain)
             .scrollIndicators(.hidden)
             .onAppear {

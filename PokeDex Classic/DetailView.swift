@@ -11,33 +11,31 @@ struct DetailView: View {
     @State var selectedTab = 0
 
     var body: some View {
-        VStack(spacing: 20) {
-            VStack {
+        ZStack {
+            // Usa el color de fondo aquí y asegúrate de que llena toda la pantalla.
+            Color(red: 111/255, green: 154/255, blue: 189/255)
+                .edgesIgnoringSafeArea(.all)  // Asegura que el color se extienda a todas las áreas de la pantalla.
+
+            VStack(spacing: 20) {
                 headerSection
                 typeTagsSection
+                Spacer()
+                TabView(selection: $selectedTab) {
+                    aboutSection.tag(0)
+                    baseStatsSection.tag(1)
+                    breedingSection.tag(2)
+                    typeDefensesSection.tag(3)
+                }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                .frame(height: 300)  // Ajusta según las necesidades de tu contenido
+                .background(Color.white)  // Asegúrate de que el fondo del TabView sea blanco
+                .clipShape(RoundedRectangle(cornerRadius: 12))  // Redondea las esquinas del TabView
+                .padding(.horizontal)  // Añade padding horizontal si es necesario
             }
-            .background(.red)
-            
-            TabView(selection: $selectedTab) {
-                aboutSection.tag(0)
-                baseStatsSection.tag(1)
-                breedingSection.tag(2)
-                typeDefensesSection.tag(3)
-            }
-            .background(.white)
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))  // Ajuste para mostrar estilo de página sin indicadores
-            .frame(height: 300)  // Asegúrate de dar un marco fijo al TabView
-        }
-        
-        .padding()
-        .navigationTitle(viewModel.selectedPokemon?.name.capitalized ?? "Pokémon")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Text("#\(viewModel.selectedPokemon?.id ?? 0)")
-            }
+            .padding(.top)  // Añade padding en la parte superior si es necesario para evitar la notch o el sensor.
         }
     }
+    
     var headerSection: some View {
         VStack {
             AsyncImage(url: URL(string: viewModel.selectedPokemon?.sprites.frontDefault ?? "")) { image in
@@ -48,8 +46,6 @@ struct DetailView: View {
                 Color.gray.frame(width: 200, height: 200)
             }
             .frame(width: 200, height: 200)
-            .background(Color.white.opacity(0.5))
-            .cornerRadius(100)
         }
     }
 

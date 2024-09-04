@@ -12,15 +12,17 @@ struct ContentView: View {
     @Environment(PokemonViewModel.self) var viewModel
     
     var body: some View {
-        
-        VStack {
-            ListView()
-                .environment(viewModel)
-        }
-        .padding()
+            VStack {
+                ListView()
+                    .environment(viewModel)
+                    .background(.clear)
+                
+            }
+        .ignoresSafeArea()
     }
 }
 
 #Preview {
     ContentView()
+        .environment(PokemonViewModel())
 }
