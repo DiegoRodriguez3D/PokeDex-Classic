@@ -49,29 +49,84 @@ struct DetailView: View {
 
             
                 VStack(spacing: 20) {
-                    headerSection
-                        .padding(.top, 80)
+                    HStack() {
+                        VStack(alignment: .leading, spacing: 10) {
+                            
+                            Text(viewModel.selectedPokemon?.name.capitalized ?? "Pokemon")
+                                .font(.largeTitle)
+                                .bold()
+                                .foregroundStyle(.white)
+                            
+                            
+                            HStack {
+                                ForEach(viewModel.selectedPokemon?.types ?? [], id: \.slot) { type in
+                                    Text(type.type.name.capitalized)
+                                        .foregroundColor(.white)
+                                        .font(.footnote)
+                                        .padding(8)
+                                        .frame(width: 70)
+                                        .background(Color(.white).opacity(0.3))
+                                        .cornerRadius(10)
+                                }
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        Text("#\(viewModel.selectedPokemon?.id ?? 0)")
+                            .font(.title3)
+                            .bold()
+                            .foregroundStyle(.white)
+                    }
+                    .padding(.horizontal, 30)
+                    .padding(.top, 80)
+                    
                     Spacer()
                     
                     ZStack(alignment: .top) {
-                        TabView(selection: $selectedTab) {
-                            aboutSection.tag(0)
-                            baseStatsSection.tag(1)
-                            breedingSection.tag(2)
-                            typeDefensesSection.tag(3)
+                        VStack {
+                            VStack {
+                                Picker("Sections", selection: $selectedTab) {
+                                    Text("About").tag(0)
+                                    Text("Base Stats").tag(1)
+                                }
+                                .pickerStyle(.segmented)
+                                .padding(.horizontal, 30)
+                                .padding(.top, 80)
+                                
+                                
+                                TabView(selection: $selectedTab) {
+                                    //About Section
+                                    VStack(alignment: .leading){
+                                        AboutTextView(height: "\(viewModel.selectedPokemon?.height ?? 0) cm", weight: "\(viewModel.selectedPokemon?.weight ?? 0) kg", abilities: "\(viewModel.selectedPokemon?.abilities.map { $0.ability.name.capitalized }.joined(separator: ", ") ?? "N/A")", baseExp: "\(viewModel.selectedPokemon?.baseExperience ?? 0) exp")
+                                        
+                                    }
+                                    .padding(.horizontal, 40)
+                                    .tag(0)
+                                    
+                                    //Base Stats Section
+                                    StatsView(stats: viewModel.selectedPokemon?.stats ?? [])
+                                        .padding(.horizontal, 40)
+                                        .tag(1)
+                                    
+                                }
+                                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                                
+                            }
+                            .frame(height: geo.size.height/2)
+                            .background(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 32))
                         }
-                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-                        .frame(height: geo.size.height/2)
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 32))
                         
                         AsyncImage(url: URL(string: viewModel.selectedPokemon?.sprites.frontDefault ?? "")) { image in
                             image
                                 .resizable()
                                 .frame(width: geo.size.width, height: geo.size.width)
                                 .offset(y: -(geo.size.height/3))
+                                .allowsHitTesting(false)
                         } placeholder: {
                             ProgressView()
+                                .allowsHitTesting(false)
                         }
                     }
                 }
@@ -79,82 +134,6 @@ struct DetailView: View {
             }
         }
         .ignoresSafeArea()
-    }
-    
-    var headerSection: some View {
-        
-        HStack() {
-            VStack(alignment: .leading, spacing: 10) {
-                
-                Text(viewModel.selectedPokemon?.name.capitalized ?? "Pokemon")
-                    .font(.largeTitle)
-                    .bold()
-                    .foregroundStyle(.white)
-                
-                
-                HStack {
-                    ForEach(viewModel.selectedPokemon?.types ?? [], id: \.slot) { type in
-                        Text(type.type.name.capitalized)
-                            .foregroundColor(.white)
-                            .font(.footnote)
-                            .padding(8)
-                            .frame(width: 70)
-                            .background(Color(.white).opacity(0.3))
-                            .cornerRadius(10)
-                    }
-                }
-            }
-            
-            Spacer()
-            
-            Text("#\(viewModel.selectedPokemon?.id ?? 0)")
-                .font(.title3)
-                .bold()
-                .foregroundStyle(.white)
-        }
-        .padding(.horizontal, 30)
-    }
-
-    var aboutSection: some View {
-        VStack(alignment: .leading) {
-            Text("About")
-                .font(.headline)
-            Text("Height: \(viewModel.selectedPokemon?.height ?? 0) cm")
-            Text("Weight: \(viewModel.selectedPokemon?.weight ?? 0) kg")
-            Text("Abilities: \(viewModel.selectedPokemon?.abilities.map { $0.ability.name }.joined(separator: ", ") ?? "N/A")")
-        }
-    }
-
-    var baseStatsSection: some View {
-        VStack(alignment: .leading) {
-            Text("Base Stats")
-                .font(.headline)
-            ForEach(viewModel.selectedPokemon?.stats ?? [], id: \.stat.url) { stat in
-                HStack {
-                    Text(stat.stat.name.capitalized)
-                    Spacer()
-                    Text("\(stat.baseStat)")
-                }
-            }
-        }
-    }
-
-    var breedingSection: some View {
-        VStack(alignment: .leading) {
-            Text("Breeding")
-                .font(.headline)
-            // Placeholder for breeding data
-            Text("Breeding data goes here")
-        }
-    }
-
-    var typeDefensesSection: some View {
-        VStack(alignment: .leading) {
-            Text("Type Defenses")
-                .font(.headline)
-            // Placeholder for type defenses
-            Text("Type defenses go here")
-        }
     }
 }
 

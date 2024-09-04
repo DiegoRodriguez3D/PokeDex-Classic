@@ -28,7 +28,7 @@ struct ListView: View {
                 
                 ScrollView {
                     VStack(alignment: .leading) {
-                        Text("PokeDex")
+                        Text("PokéDex")
                             .font(.largeTitle)
                             .bold()
                             .padding()
