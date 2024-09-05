@@ -15,10 +15,12 @@ class DataService {
         return try await performRequest(urlString: urlString)
     }
 
-    // Gets a list of the first 151 Pokemon
+    // Gets a list of the first 151 Pokemon with all the details
     func fetchAllPokemon() async throws -> [Pokemon] {
         let urlString = "\(baseURL)pokemon?limit=151" // We only need first generation Pokemon
         let listResponse: PokemonListResponse = try await performRequest(urlString: urlString)
+        
+        //default endpoint only returns name and url, so we need to fetch all details to display PokemonCards on ListView
         return try await fetchDetailsForPokemonList(listResponse.results)
     }
 
