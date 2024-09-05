@@ -27,7 +27,7 @@ struct OnboardingView: View {
                 
                 OnboardingViewDetails(bgColor: PokemonTypeColorHelper.color(forType: "fire"),
                                       headline: "Fetching them all!",
-                                      subHeadline: "Pokédex Classic shows you all you need to know from the first 151 Pokémon.") {
+                                      subHeadline: "Pokédex Classic shows you all you need to know from the first 151 Pokémon.", buttonTex: "Continue") {
                     withAnimation {
                         selectedViewIndex = 1
                     }
@@ -38,7 +38,7 @@ struct OnboardingView: View {
                 
                 OnboardingViewDetails(bgColor: PokemonTypeColorHelper.color(forType: "water"),
                                       headline: "Dive into the Past!",
-                                      subHeadline: "Splash into your childhood with every first gen Pokémon.") {
+                                      subHeadline: "Splash into your childhood with every first gen Pokémon.", buttonTex: "Let's Go!") {
                     dismiss()
                 }
                                       .tag(1)

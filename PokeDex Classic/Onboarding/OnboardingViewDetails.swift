@@ -12,6 +12,7 @@ struct OnboardingViewDetails: View {
     var bgColor: Color
     var headline: String
     var subHeadline: String
+    var buttonTex: String
     var buttonAction: () -> Void
     
     var body: some View {
@@ -66,7 +67,7 @@ struct OnboardingViewDetails: View {
                         RoundedRectangle(cornerRadius: 14)
                             .foregroundStyle(Color.white)
                             .frame(height: 50)
-                        Text("Continue")
+                        Text(buttonTex)
                             .bold()
                             .foregroundStyle(.black)
                     }
@@ -83,7 +84,7 @@ struct OnboardingViewDetails: View {
 #Preview {
     OnboardingViewDetails(bgColor: PokemonTypeColorHelper.color(forType: "water"),
                           headline: "Fetchingt them all!",
-                          subHeadline: "We help you discover them all again!") {
+                          subHeadline: "We help you discover them all again!", buttonTex: "Continue") {
         // Nothing
     }
 }

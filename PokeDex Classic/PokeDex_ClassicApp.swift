@@ -14,7 +14,7 @@ struct PokeDex_ClassicApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ListView()
                 .environment(viewModel)
                 .fullScreenCover(isPresented: $needsOnboarding) {
                     // on dismiss

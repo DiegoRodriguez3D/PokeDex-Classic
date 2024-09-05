@@ -10,7 +10,6 @@
 		F106B4ED2C89A421006E22A3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F106B4EC2C89A421006E22A3 /* OnboardingView.swift */; };
 		F106B4EF2C89A546006E22A3 /* OnboardingViewDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F106B4EE2C89A546006E22A3 /* OnboardingViewDetails.swift */; };
 		F17949E72C8858C200EC66DE /* PokeDex_ClassicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F17949E62C8858C200EC66DE /* PokeDex_ClassicApp.swift */; };
-		F17949E92C8858C200EC66DE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F17949E82C8858C200EC66DE /* ContentView.swift */; };
 		F17949EB2C8858C300EC66DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F17949EA2C8858C300EC66DE /* Assets.xcassets */; };
 		F17949EE2C8858C300EC66DE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F17949ED2C8858C300EC66DE /* Preview Assets.xcassets */; };
 		F17949F62C88592500EC66DE /* Pokemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F17949F52C88592500EC66DE /* Pokemon.swift */; };
@@ -28,7 +27,6 @@
 		F106B4EE2C89A546006E22A3 /* OnboardingViewDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewDetails.swift; sourceTree = "<group>"; };
 		F17949E32C8858C200EC66DE /* PokeDex Classic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PokeDex Classic.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F17949E62C8858C200EC66DE /* PokeDex_ClassicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokeDex_ClassicApp.swift; sourceTree = "<group>"; };
-		F17949E82C8858C200EC66DE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F17949EA2C8858C300EC66DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F17949ED2C8858C300EC66DE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F17949F52C88592500EC66DE /* Pokemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pokemon.swift; sourceTree = "<group>"; };
@@ -82,7 +80,6 @@
 			children = (
 				F17949E62C8858C200EC66DE /* PokeDex_ClassicApp.swift */,
 				F106B4EB2C89A3EE006E22A3 /* Onboarding */,
-				F17949E82C8858C200EC66DE /* ContentView.swift */,
 				F17949F92C88599100EC66DE /* ListView.swift */,
 				F17949FD2C885F4E00EC66DE /* DetailView.swift */,
 				F17949FB2C8859A500EC66DE /* PokemonViewModel.swift */,
@@ -200,7 +197,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1794A082C88D31A00EC66DE /* StatsView.swift in Sources */,
-				F17949E92C8858C200EC66DE /* ContentView.swift in Sources */,
 				F1794A012C886F2E00EC66DE /* PokemonTypeColorHelper.swift in Sources */,
 				F17949FC2C8859A500EC66DE /* PokemonViewModel.swift in Sources */,
 				F17949E72C8858C200EC66DE /* PokeDex_ClassicApp.swift in Sources */,
