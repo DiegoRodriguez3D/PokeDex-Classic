@@ -8,6 +8,8 @@ import SwiftUI
 
 struct DetailView: View {
     @Environment(PokemonViewModel.self) var viewModel
+    @Environment(\.colorScheme) var colorScheme
+    
     @State var selectedTab = 0
     
     var body: some View {
@@ -115,7 +117,7 @@ struct DetailView: View {
                                 
                             }
                             .frame(height: geo.size.height/2)
-                            .background(Color.white)
+                            .background(colorScheme == .dark ? Color.black : Color.white)
                             .clipShape(RoundedRectangle(cornerRadius: 32))
                         }
                         

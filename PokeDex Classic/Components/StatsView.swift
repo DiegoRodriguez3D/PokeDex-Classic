@@ -10,6 +10,8 @@ import SwiftUI
 struct StatsView: View {
     let stats: [PokemonStat]
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             ForEach(stats, id: \.stat.name) { stat in
@@ -23,6 +25,8 @@ struct StatsView: View {
                     
                     Text("\(stat.baseStat)")
                         .font(.body)
+                        .bold()
+                        .foregroundStyle(colorScheme == .dark ? Color.white : Color.black)
                         .frame(width: 40, alignment: .trailing)
                     
                     Spacer()

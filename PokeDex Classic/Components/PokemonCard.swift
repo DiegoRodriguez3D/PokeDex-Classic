@@ -60,9 +60,9 @@ struct PokemonCard: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 100, height: 100)
-                            .offset(CGSize(width: 10, height: 10))
+                            .offset(CGSize(width: 11, height: 11))
                             .clipped()
-                            .offset(CGSize(width: 9, height: 0))
+                            .offset(CGSize(width: 10, height: 0))
                             .opacity(0.3)
                         
                         AsyncImage(url: URL(string: pokemon.sprites.frontDefault ?? "")) { image in
@@ -80,4 +80,9 @@ struct PokemonCard: View {
         }
         
     }
+}
+
+#Preview {
+    ListView()
+        .environment(PokemonViewModel())
 }
