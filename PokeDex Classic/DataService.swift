@@ -9,83 +9,59 @@ import Foundation
 class DataService {
     private let baseURL = "https://pokeapi.co/api/v2/"
 
-    // Fetchs Pokemon by Name or ID
-    func fetchPokemonDetails(for nameOrId: String, completion: @escaping (Result<Pokemon, Error>) -> Void) {
+    // Fetches Pokemon by Name or ID
+    func fetchPokemonDetails(for nameOrId: String) async throws -> Pokemon {
         let urlString = "\(baseURL)pokemon/\(nameOrId.lowercased())"
-        performRequest(urlString: urlString, completion: completion)
+        return try await performRequest(urlString: urlString)
     }
 
-    //Gets a general list of Pokemon
-    func fetchAllPokemon(completion: @escaping (Result<[Pokemon], Error>) -> Void) {
-        let urlString = "\(baseURL)pokemon?limit=151" // We only need first gen Pokemon
-        performRequest(urlString: urlString) { [weak self] (result: Result<PokemonListResponse, Error>) in
-            switch result {
-            case .success(let listResponse):
-                self?.fetchDetailsForPokemonList(listResponse.results, completion: completion)
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+    // Gets a list of the first 151 Pokemon
+    func fetchAllPokemon() async throws -> [Pokemon] {
+        let urlString = "\(baseURL)pokemon?limit=151" // We only need first generation Pokemon
+        let listResponse: PokemonListResponse = try await performRequest(urlString: urlString)
+        return try await fetchDetailsForPokemonList(listResponse.results)
     }
 
-    //For every Pokemon on the list, we need to fetch details like pic/stripe, abilities, stats...
-    private func fetchDetailsForPokemonList(_ pokemonList: [PokemonPartial], completion: @escaping (Result<[Pokemon], Error>) -> Void) {
-        var pokemonDetails: [Pokemon] = []
-        var errors: [Error] = []
-        let group = DispatchGroup()
-
-        for pokemon in pokemonList {
-            group.enter()
-            fetchPokemonDetails(for: pokemon.name) { result in
-                defer { group.leave() }
-                switch result {
-                case .success(let details):
-                    pokemonDetails.append(details)
-                case .failure(let error):
-                    errors.append(error)
+    // Fetch details for every Pokemon on the list
+    private func fetchDetailsForPokemonList(_ pokemonList: [PokemonPartial]) async throws -> [Pokemon] {
+        let pokemonDetails = try await withThrowingTaskGroup(of: Pokemon.self, body: { group in
+            var details: [Pokemon] = []
+            for pokemon in pokemonList {
+                group.addTask {
+                    return try await self.fetchPokemonDetails(for: pokemon.name)
                 }
             }
-        }
-
-        group.notify(queue: .main) {
-            if errors.isEmpty {
-                completion(.success(pokemonDetails.sorted { $0.id < $1.id }))
-            } else {
-                completion(.failure(errors.first!))
+            for try await detail in group {
+                details.append(detail)
             }
-        }
+            return details.sorted { $0.id < $1.id }
+        })
+        return pokemonDetails
     }
 
-    // Performs an API request
-    private func performRequest<T: Decodable>(urlString: String, completion: @escaping (Result<T, Error>) -> Void) {
+    // Performs an API request using async/await
+    private func performRequest<T: Decodable>(urlString: String) async throws -> T {
         guard let url = URL(string: urlString) else {
-            completion(.failure(DataError.invalidUrl))
-            return
+            throw DataError.invalidUrl
         }
 
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
+        var request = URLRequest(url: url)
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
 
-            guard let data = data else {
-                completion(.failure(DataError.noData))
-                return
-            }
+        let (data, response) = try await URLSession.shared.data(for: request)
 
-            do {
-                let decodedResponse = try JSONDecoder().decode(T.self, from: data)
-                completion(.success(decodedResponse))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw DataError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(T.self, from: data)
     }
 
     enum DataError: Error {
         case invalidUrl
         case noData
         case decodingError
+        case noApiKey
+        case invalidResponse
     }
 }

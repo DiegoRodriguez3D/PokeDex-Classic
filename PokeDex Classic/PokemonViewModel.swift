@@ -23,31 +23,17 @@ class PokemonViewModel {
     init() {
         loadPokemons()
     }
-
-    func loadPokemons() {
-           dataService.fetchAllPokemon { result in
-               DispatchQueue.main.async {
-                   switch result {
-                   case .success(let pokemons):
-                       self.pokemons = pokemons
-                   case .failure(let error):
-                       print("Error fetching Pokémon: \(error)")
-                   }
-               }
+    // Function to load all pokemons
+       func loadPokemons() {
+           Task {
+               pokemons = try await dataService.fetchAllPokemon()
            }
        }
 
-    //load selectedPokemon by name or id
-    func loadPokemon(by nameOrId: String) {
-        dataService.fetchPokemonDetails(for: nameOrId) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let pokemon):
-                    self.selectedPokemon = pokemon
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        }
-    }
+       // Function to load selected pokemon by name or id
+       func loadPokemon(by nameOrId: String) {
+           Task {
+               selectedPokemon = try await dataService.fetchPokemonDetails(for: nameOrId)
+           }
+       }
 }
