@@ -13,7 +13,6 @@ import Combine
 class PokemonViewModel {
     var pokemons: [Pokemon] = []
     var selectedPokemon: Pokemon?
-    
     var searchText: String = ""
     
     private var dataService = DataService()

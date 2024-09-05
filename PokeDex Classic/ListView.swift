@@ -10,7 +10,6 @@ import Combine
 struct ListView: View {
     @Environment(PokemonViewModel.self) var viewModel
     
-    @State private var isSearchBarVisible = false
     @State private var searchText = ""
     @State private var isActive = false
     
@@ -20,15 +19,22 @@ struct ListView: View {
     ]
     
     var body: some View {
+        
+        let glossaryItems = viewModel.pokemons
+        
+        var filteredItems: [Pokemon] {
+            if searchText.isEmpty {
+                return glossaryItems
+            } else {
+                return glossaryItems.filter { item in
+                    item.name.localizedCaseInsensitiveContains(searchText)
+                }
+            }
+        }
+        
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 VStack {
-                    if isSearchBarVisible {
-                        SearchBar(searchText: $searchText, onSearch: {
-                            viewModel.loadPokemon(by: searchText)
-                        })
-                    }
-                    
                     ZStack (alignment: .topTrailing) {
                         Image("pokeball")
                             .resizable()
@@ -41,7 +47,7 @@ struct ListView: View {
                         ScrollView {
                             VStack(alignment: .leading) {
                                 LazyVGrid(columns: columns, spacing: 20) {
-                                    ForEach(viewModel.pokemons) { pokemon in
+                                    ForEach(filteredItems) { pokemon in
                                         NavigationLink(destination: DetailView()) {
                                             PokemonCard(pokemon: pokemon)
                                         }
@@ -58,22 +64,8 @@ struct ListView: View {
                 }
                 .listStyle(.plain)
                 .scrollIndicators(.hidden)
+                .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Who you gonna call?")
                 .navigationTitle("PokéDex")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            withAnimation {
-                                isSearchBarVisible.toggle()
-                            }
-                        }) {
-                            Image(systemName: "line.3.horizontal.decrease.circle.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 30)
-                                .foregroundStyle(.black)
-                        }
-                    }
-                }
                 .onAppear {
                     viewModel.loadPokemons()
                 }
