@@ -72,7 +72,6 @@ struct PokemonStat: Codable {
     }
 }
 
-
 struct PokemonType: Codable, Identifiable {
     let slot: Int
     let type: NamedAPIResource
@@ -105,5 +104,14 @@ struct PokemonMoveVersion: Codable {
         case moveLearnMethod = "move_learn_method"
         case versionGroup = "version_group"
     }
+}
+
+struct PokemonListResponse: Codable {
+    let results: [PokemonPartial]
+}
+
+struct PokemonPartial: Codable {
+    let name: String
+    let url: String
 }
 

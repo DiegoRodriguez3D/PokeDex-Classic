@@ -9,15 +9,15 @@ import Foundation
 class DataService {
     private let baseURL = "https://pokeapi.co/api/v2/"
 
-    // Función para obtener los detalles de un Pokémon específico por nombre o ID.
+    // Fetchs Pokemon by Name or ID
     func fetchPokemonDetails(for nameOrId: String, completion: @escaping (Result<Pokemon, Error>) -> Void) {
         let urlString = "\(baseURL)pokemon/\(nameOrId.lowercased())"
         performRequest(urlString: urlString, completion: completion)
     }
 
-    // Función para obtener la lista de los primeros 151 Pokémon.
+    //Gets a general list of Pokemon
     func fetchAllPokemon(completion: @escaping (Result<[Pokemon], Error>) -> Void) {
-        let urlString = "\(baseURL)pokemon?limit=151"
+        let urlString = "\(baseURL)pokemon?limit=151" // We only need first gen Pokemon
         performRequest(urlString: urlString) { [weak self] (result: Result<PokemonListResponse, Error>) in
             switch result {
             case .success(let listResponse):
@@ -28,7 +28,7 @@ class DataService {
         }
     }
 
-    // Función para obtener los detalles de cada Pokémon de la lista.
+    //For every Pokemon on the list, we need to fetch details like pic/stripe, abilities, stats...
     private func fetchDetailsForPokemonList(_ pokemonList: [PokemonPartial], completion: @escaping (Result<[Pokemon], Error>) -> Void) {
         var pokemonDetails: [Pokemon] = []
         var errors: [Error] = []
@@ -49,14 +49,14 @@ class DataService {
 
         group.notify(queue: .main) {
             if errors.isEmpty {
-                completion(.success(pokemonDetails.sorted { $0.id < $1.id }))  // Ordenar por ID para mantener el orden
+                completion(.success(pokemonDetails.sorted { $0.id < $1.id }))
             } else {
-                completion(.failure(errors.first!))  // Devuelve el primer error encontrado
+                completion(.failure(errors.first!))
             }
         }
     }
 
-    // Función genérica para realizar una solicitud a la API y decodificar la respuesta.
+    // Performs an API request
     private func performRequest<T: Decodable>(urlString: String, completion: @escaping (Result<T, Error>) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(.failure(DataError.invalidUrl))
@@ -88,14 +88,4 @@ class DataService {
         case noData
         case decodingError
     }
-}
-
-// Modelos para la respuesta de la API.
-struct PokemonListResponse: Codable {
-    let results: [PokemonPartial]
-}
-
-struct PokemonPartial: Codable {
-    let name: String
-    let url: String
 }

@@ -10,11 +10,18 @@ import SwiftUI
 @main
 struct PokeDex_ClassicApp: App {
     @State var viewModel = PokemonViewModel()
+    @AppStorage("onboarding") var needsOnboarding = true
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(viewModel)
+                .fullScreenCover(isPresented: $needsOnboarding) {
+                    // on dismiss
+                    needsOnboarding = false
+                } content: {
+                    OnboardingView()
+                }
         }
     }
 }
