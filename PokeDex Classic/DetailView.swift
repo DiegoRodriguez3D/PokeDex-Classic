@@ -98,8 +98,12 @@ struct DetailView: View {
                                 TabView(selection: $selectedTab) {
                                     //About Section
                                     VStack(alignment: .leading){
-                                        AboutTextView(height: "\(viewModel.selectedPokemon?.height ?? 0) cm", weight: "\(viewModel.selectedPokemon?.weight ?? 0) kg", abilities: "\(viewModel.selectedPokemon?.abilities.map { $0.ability.name.capitalized }.joined(separator: ", ") ?? "N/A")", baseExp: "\(viewModel.selectedPokemon?.baseExperience ?? 0) exp")
-                                        
+                                        AboutTextView(
+                                            height: "\(viewModel.selectedPokemon?.formattedHeightInMeters ?? "0") m",
+                                            weight: "\(viewModel.selectedPokemon?.formattedWeightInKilograms ?? "0") kg",
+                                            abilities: "\(viewModel.selectedPokemon?.abilities.map { $0.ability.name.capitalized }.joined(separator: ", ") ?? "N/A")",
+                                            baseExp: "\(viewModel.selectedPokemon?.baseExperience ?? 0) exp"
+                                        )
                                     }
                                     .padding(.horizontal, 40)
                                     .tag(0)

@@ -22,7 +22,6 @@ class PokemonViewModel {
 
     init() {
         loadPokemons()
-        setupSearch()
     }
 
     func loadPokemons() {
@@ -38,19 +37,25 @@ class PokemonViewModel {
            }
        }
 
-    func setupSearch() {
-//        $searchText
-//            .removeDuplicates()
-//            .debounce(for: 0.5, scheduler: RunLoop.main)
-//            .sink { [weak self] in self?.filterPokemons(with: $0) }
-//            .store(in: &cancellables)
+    func loadPokemon(by nameOrId: String) {
+        dataService.fetchPokemonDetails(for: nameOrId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let pokemon):
+                    self.selectedPokemon = pokemon
+                case .failure(let error):
+                    self.handleSearchError(error)
+                }
+            }
+        }
     }
 
-    private func filterPokemons(with filter: String) {
-        if filter.isEmpty {
-            loadPokemons()
+    private func handleSearchError(_ error: Error) {
+        // Aquí puedes definir cómo manejar errores, por ejemplo:
+        if let urlError = error as? URLError, urlError.code == .fileDoesNotExist {
+            print("No se han encontrado resultados para el Pokémon especificado.")
         } else {
-            pokemons = pokemons.filter { $0.name.lowercased().contains(filter.lowercased()) }
+            print("Error al cargar detalles del Pokémon: \(error)")
         }
     }
 }

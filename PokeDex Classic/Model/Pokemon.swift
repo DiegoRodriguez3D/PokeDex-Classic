@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Pokemon: Codable, Identifiable {
+struct Pokemon: Codable, Identifiable, Equatable {
     let id: Int
     let name: String
     let baseExperience: Int
@@ -19,13 +19,36 @@ struct Pokemon: Codable, Identifiable {
     let stats: [PokemonStat]
     let types: [PokemonType]
     let moves: [PokemonMove]
-
+    
+    static func == (lhs: Pokemon, rhs: Pokemon) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     enum CodingKeys: String, CodingKey {
         case id, name, height, weight, abilities, stats, types, moves, sprites
         case baseExperience = "base_experience"
         case isDefault = "is_default"
     }
 }
+
+extension Pokemon {
+    var heightInMeters: Double {
+        Double(height) / 10.0  // Pokemon height is in decimeters by default
+    }
+    
+    var weightInKilograms: Double {
+        Double(weight) / 10.0  // Pokemon weight is in HG by default
+    }
+    
+    var formattedHeightInMeters: String {
+        String(format: "%.2f", heightInMeters)
+    }
+    
+    var formattedWeightInKilograms: String {
+        String(format: "%.2f", weightInKilograms)
+    }
+}
+
 
 struct PokemonSprites: Codable {
     let frontDefault: String?
@@ -36,7 +59,7 @@ struct PokemonSprites: Codable {
     let backShiny: String?
     let backFemale: String?
     let backShinyFemale: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case frontDefault = "front_default"
         case frontShiny = "front_shiny"
@@ -53,7 +76,7 @@ struct PokemonAbility: Codable {
     let isHidden: Bool
     let slot: Int
     let ability: NamedAPIResource
-
+    
     enum CodingKeys: String, CodingKey {
         case slot
         case ability
@@ -65,7 +88,7 @@ struct PokemonStat: Codable {
     let baseStat: Int
     let effort: Int
     let stat: NamedAPIResource
-
+    
     enum CodingKeys: String, CodingKey {
         case baseStat = "base_stat"
         case effort, stat
@@ -87,7 +110,7 @@ struct NamedAPIResource: Codable {
 struct PokemonMove: Codable {
     let move: NamedAPIResource
     let versionGroupDetails: [PokemonMoveVersion]
-
+    
     enum CodingKeys: String, CodingKey {
         case move
         case versionGroupDetails = "version_group_details"
@@ -98,7 +121,7 @@ struct PokemonMoveVersion: Codable {
     let levelLearnedAt: Int
     let moveLearnMethod: NamedAPIResource
     let versionGroup: NamedAPIResource
-
+    
     enum CodingKeys: String, CodingKey {
         case levelLearnedAt = "level_learned_at"
         case moveLearnMethod = "move_learn_method"
