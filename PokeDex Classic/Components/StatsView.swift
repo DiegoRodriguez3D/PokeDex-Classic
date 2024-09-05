@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StatsView: View {
-    let stats: [PokemonStat]  // Asume que esto es parte del modelo de datos del Pokémon
+    let stats: [PokemonStat]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
