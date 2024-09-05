@@ -18,6 +18,7 @@ struct SearchBar: View {
                     .textFieldStyle(.roundedBorder)
                     .frame(height: 44)
                     .padding(.leading, 10)
+                    .autocorrectionDisabled()
                 
                 Button(action: onSearch) {
                     Image(systemName: "magnifyingglass")
