@@ -37,6 +37,7 @@ class PokemonViewModel {
            }
        }
 
+    //load selectedPokemon by name or id
     func loadPokemon(by nameOrId: String) {
         dataService.fetchPokemonDetails(for: nameOrId) { result in
             DispatchQueue.main.async {
@@ -44,18 +45,9 @@ class PokemonViewModel {
                 case .success(let pokemon):
                     self.selectedPokemon = pokemon
                 case .failure(let error):
-                    self.handleSearchError(error)
+                    print(error)
                 }
             }
-        }
-    }
-
-    private func handleSearchError(_ error: Error) {
-        // Aquí puedes definir cómo manejar errores, por ejemplo:
-        if let urlError = error as? URLError, urlError.code == .fileDoesNotExist {
-            print("No se han encontrado resultados para el Pokémon especificado.")
-        } else {
-            print("Error al cargar detalles del Pokémon: \(error)")
         }
     }
 }

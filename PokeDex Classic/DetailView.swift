@@ -9,45 +9,43 @@ import SwiftUI
 struct DetailView: View {
     @Environment(PokemonViewModel.self) var viewModel
     @State var selectedTab = 0
-
+    
     var body: some View {
         let backgroundColor = viewModel.selectedPokemon.map {
-                  PokemonTypeColorHelper.color(forType: $0.types.first?.type.name ?? "")
+            PokemonTypeColorHelper.color(forType: $0.types.first?.type.name ?? "")
         } ?? .red
         
         GeometryReader { geo in
-        ZStack {
-            ZStack(alignment: .trailing) {
-                ZStack(alignment: .topLeading) {
-                    backgroundColor.edgesIgnoringSafeArea(.all)
-                    
-                    RoundedRectangle(cornerRadius: 20)
-                        .foregroundStyle(.white)
-                        .frame(width: 200, height: 200)
-                        .opacity(0.15)
-                        .offset(x: -50, y:-80)
-                        .rotationEffect(.degrees(-20))
-                }
-                
-                
-                ZStack(alignment: .top) {
-                    Image("pokeball")
-                        .resizable()
-                        .frame(width: 200, height: 200)
-                        .opacity(0.3)
-                        .offset(x: -(geo.size.width/50), y: -(geo.size.height/10))
-                    
-                    Image("dots")
-                        .resizable()
-                        .colorInvert()
-                        .frame(width: 100, height: 100)
-                        .opacity(0.1)
-                        .offset(x: -(geo.size.width/2), y: -(geo.size.height/10))
+            ZStack {
+                ZStack(alignment: .trailing) {
+                    ZStack(alignment: .topLeading) {
+                        backgroundColor.edgesIgnoringSafeArea(.all)
                         
+                        RoundedRectangle(cornerRadius: 20)
+                            .foregroundStyle(.white)
+                            .frame(width: 200, height: 200)
+                            .opacity(0.15)
+                            .offset(x: -50, y:-80)
+                            .rotationEffect(.degrees(-20))
+                    }
+                    
+                    ZStack(alignment: .top) {
+                        Image("pokeball")
+                            .resizable()
+                            .frame(width: 200, height: 200)
+                            .opacity(0.3)
+                            .offset(x: -(geo.size.width/50), y: -(geo.size.height/10))
+                        
+                        Image("dots")
+                            .resizable()
+                            .colorInvert()
+                            .frame(width: 100, height: 100)
+                            .opacity(0.1)
+                            .offset(x: -(geo.size.width/2), y: -(geo.size.height/10))
+                        
+                    }
                 }
-            }
-
-            
+                
                 VStack(spacing: 20) {
                     HStack() {
                         VStack(alignment: .leading, spacing: 10) {
@@ -93,7 +91,6 @@ struct DetailView: View {
                                 .pickerStyle(.segmented)
                                 .padding(.horizontal, 30)
                                 .padding(.top, 80)
-                                
                                 
                                 TabView(selection: $selectedTab) {
                                     //About Section
